@@ -19,8 +19,7 @@ public class Expense {
     @Field(name = "amount")
     private BigDecimal expenseAmount;
 
-    public Expense(String id, String expenseName, ExpenseCategory expenseCategory, BigDecimal expenseAmount) {
-        this.id = id;
+    public Expense(String expenseName, ExpenseCategory expenseCategory, BigDecimal expenseAmount) {
         this.expenseName = expenseName;
         this.expenseCategory = expenseCategory;
         this.expenseAmount = expenseAmount;
@@ -56,5 +55,10 @@ public class Expense {
 
     public void setExpenseAmount(BigDecimal expenseAmount) {
         this.expenseAmount = expenseAmount;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }
