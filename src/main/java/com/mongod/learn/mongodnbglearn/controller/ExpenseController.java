@@ -21,7 +21,16 @@ public class ExpenseController {
     public ResponseEntity<Expense> addExpense(@RequestBody Expense expense){
        return new ResponseEntity<>(expenseService.addExpense(expense), HttpStatus.OK);
     }
-    public void removeExpense( ){}
+    @DeleteMapping("/{expenseName}")
+    public void removeExpense(@PathVariable String expenseName ){
+
+        if (expenseService.removeExpenseByName(expenseName)){
+            System.out.println("removed Succeeded");
+        } else {
+            System.out.println("failed");
+        }
+
+    }
     @GetMapping
     public ResponseEntity<List<Expense>> getAllExpenses(){
 

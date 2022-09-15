@@ -19,7 +19,7 @@ public class ExpenseService {
     public Expense addExpense(Expense expense){
         expense.setId(UUID.randomUUID().toString());
         System.out.println(expense.getExpenseName());
-        return expenseRepository.save(expense);
+        return expenseRepository.insert(expense);
     }
     public void removeExpense(){}
     public List<Expense> getAllExpenses(){
@@ -29,6 +29,8 @@ public class ExpenseService {
     public Expense getExpenseByName(String name){
         return expenseRepository.findExpenseByExpenseName(name);
     }
-    public void removeExpenseByName(){}
+    public boolean removeExpenseByName(String expenseName){
+        return expenseRepository.deleteByExpenseName(expenseName);
+    }
 
 }
