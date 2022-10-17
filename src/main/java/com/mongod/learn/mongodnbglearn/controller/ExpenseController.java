@@ -1,5 +1,6 @@
 package com.mongod.learn.mongodnbglearn.controller;
 
+import com.mongod.learn.mongodnbglearn.Exception.ExpenseNotFound;
 import com.mongod.learn.mongodnbglearn.Services.ExpenseService;
 import com.mongod.learn.mongodnbglearn.model.Expense;
 import org.springframework.http.HttpStatus;
@@ -24,11 +25,7 @@ public class ExpenseController {
     @DeleteMapping("/{expenseName}")
     public void removeExpense(@PathVariable String expenseName ){
 
-        if (expenseService.removeExpenseByName(expenseName)){
-            System.out.println("removed Succeeded");
-        } else {
-            System.out.println("failed");
-        }
+        expenseService.removeExpenseByName(expenseName);
 
     }
     @GetMapping
@@ -37,11 +34,19 @@ public class ExpenseController {
         return new ResponseEntity<>(expenseService.getAllExpenses(), HttpStatus.OK);
 
     }
-    public void updateExpenses(){}
+    @PutMapping
+    public ResponseEntity<Expense> updateExpenses(@RequestBody Expense expense) throws Exception {
+        Expense returned = expenseService.updateExpenses(expense);
+        if(returned != null) {
+            return new ResponseEntity<>(returned, HttpStatus.ACCEPTED);
+        }
+            throw new ExpenseNotFound();
+
+    }
     @GetMapping("/{name}")
     public ResponseEntity<Expense> getExpenseByName(@PathVariable String name){
         return new ResponseEntity<>(expenseService.getExpenseByName(name), HttpStatus.OK);
     }
-    public void removeExpenseByName(){}
+
 
 }
