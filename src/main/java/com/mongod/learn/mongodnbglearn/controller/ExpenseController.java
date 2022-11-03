@@ -30,7 +30,7 @@ public class ExpenseController {
     }
     @GetMapping
     public ResponseEntity<List<Expense>> getAllExpenses(){
-
+        System.out.println("this is a test");
         return new ResponseEntity<>(expenseService.getAllExpenses(), HttpStatus.OK);
 
     }
