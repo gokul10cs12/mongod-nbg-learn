@@ -21,10 +21,10 @@ public class User {
     @DocumentReference(lookup = "{'_id': ?#{#self.id}'}")
     private List<Expense> expenses;
 
-    public User(String username, String password, List<Expense> expenseList) {
+    public User(String username, String password, List<Expense> expenses) {
         this.username = username;
         this.password = password;
-        this.expenseList = expenseList;
+        this.expenses = expenses;
     }
 
     public List<Expense> getExpenses() {
@@ -34,8 +34,6 @@ public class User {
     public void setExpenses(List<Expense> expenses) {
         this.expenses = expenses;
     }
-
-    private List<Expense> expenseList;
 
     public String getId() {
         return id;
@@ -61,11 +59,4 @@ public class User {
         this.password = password;
     }
 
-    public List<Expense> getExpenseList() {
-        return expenseList;
-    }
-
-    public void setExpenseList(List<Expense> expenseList) {
-        this.expenseList = expenseList;
-    }
 }

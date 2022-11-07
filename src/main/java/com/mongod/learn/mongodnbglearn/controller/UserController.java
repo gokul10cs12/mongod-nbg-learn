@@ -4,11 +4,7 @@ import com.mongod.learn.mongodnbglearn.Services.UserService;
 import com.mongod.learn.mongodnbglearn.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +21,12 @@ public class UserController {
     public ResponseEntity<User> getUserInfo(@PathVariable String userId){
         Optional<User> user = userService.getUserInfo(userId);
         return new ResponseEntity<>( user.get(), HttpStatus.OK);
+    }
+
+
+    @PostMapping
+    public ResponseEntity<User> createUserInfo(@RequestBody User user){
+        return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
 
