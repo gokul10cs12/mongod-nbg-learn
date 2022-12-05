@@ -1,8 +1,8 @@
 package com.mongod.learn.mongodnbglearn.Services;
 
-import com.mongod.learn.mongodnbglearn.Exception.ExpenseNotFound;
 import com.mongod.learn.mongodnbglearn.model.Expense;
 import com.mongod.learn.mongodnbglearn.repository.ExpenseRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +14,11 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
 
-    public ExpenseService(ExpenseRepository expenseRepository) {
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+    public ExpenseService(ExpenseRepository expenseRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.expenseRepository = expenseRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public Expense addExpense(Expense expense){
@@ -24,6 +27,7 @@ public class ExpenseService {
     }
     public void removeExpense(){}
     public List<Expense> getAllExpenses(){
+        applicationEventPublisher.publishEvent("String it is");
         return expenseRepository.findAll();
     }
     public Expense updateExpenses(Expense expense) {
