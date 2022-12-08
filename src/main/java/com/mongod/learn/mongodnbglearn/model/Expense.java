@@ -20,21 +20,11 @@ public class Expense {
     @Field(name = "amount")
     private BigDecimal expenseAmount;
 
-    @DocumentReference(lazy = true)
-    private User user;
 
     public Expense(String expenseName, ExpenseCategory expenseCategory, BigDecimal expenseAmount) {
         this.expenseName = expenseName;
         this.expenseCategory = expenseCategory;
         this.expenseAmount = expenseAmount;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getId() {

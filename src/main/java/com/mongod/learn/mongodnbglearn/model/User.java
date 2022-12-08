@@ -1,9 +1,7 @@
 package com.mongod.learn.mongodnbglearn.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
@@ -17,8 +15,6 @@ public class User {
     @Field(name = "password")
     private String password;
 
-    @ReadOnlyProperty
-    @DocumentReference(lookup = "{'_id': ?#{#self.id}'}")
     private List<Expense> expenses;
 
     public User(String username, String password, List<Expense> expenses) {
