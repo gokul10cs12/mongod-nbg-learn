@@ -40,7 +40,10 @@ public class ExpenseController {
         if(returned != null) {
             return new ResponseEntity<>(returned, HttpStatus.ACCEPTED);
         }
-            throw new ExpenseNotFound();
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
 
     }
     @GetMapping("/{name}")

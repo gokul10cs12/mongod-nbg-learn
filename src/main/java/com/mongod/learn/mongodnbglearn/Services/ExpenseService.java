@@ -2,6 +2,7 @@ package com.mongod.learn.mongodnbglearn.Services;
 
 import com.mongod.learn.mongodnbglearn.model.Expense;
 import com.mongod.learn.mongodnbglearn.model.ExpenseCategory;
+import com.mongod.learn.mongodnbglearn.repository.CustomExpenseRepository;
 import com.mongod.learn.mongodnbglearn.repository.ExpenseRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,12 +17,15 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
 
+    private final CustomExpenseRepository customExpenseRepository;
+
     private final MongoTemplate mongoTemplate;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public ExpenseService(ExpenseRepository expenseRepository, MongoTemplate mongoTemplate, ApplicationEventPublisher applicationEventPublisher) {
+    public ExpenseService(ExpenseRepository expenseRepository, CustomExpenseRepository customExpenseRepository, MongoTemplate mongoTemplate, ApplicationEventPublisher applicationEventPublisher) {
         this.expenseRepository = expenseRepository;
+        this.customExpenseRepository = customExpenseRepository;
         this.mongoTemplate = mongoTemplate;
         this.applicationEventPublisher = applicationEventPublisher;
     }
@@ -37,10 +41,8 @@ public class ExpenseService {
         return mongoTemplate.findAll(Expense.class);
     }
     public Expense updateExpenses(Expense expense) {
-        if(expenseRepository.findById(expense.getId()).isPresent()) {
-            return expenseRepository.save(expense);
-        }
-        return  null;
+         Expense updatedExpense =  customExpenseRepository.updateExpense(expense);
+        return  updatedExpense;
 
     }
     public Expense getExpenseByName(String name){
