@@ -4,6 +4,7 @@ import com.mongod.learn.mongodnbglearn.model.Expense;
 import com.mongod.learn.mongodnbglearn.model.ExpenseCategory;
 import com.mongod.learn.mongodnbglearn.repository.CustomExpenseRepository;
 import com.mongod.learn.mongodnbglearn.repository.ExpenseRepository;
+import com.mongodb.client.model.ValidationAction;
 import org.bson.Document;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.mongodb.BulkOperationException;
@@ -67,11 +68,12 @@ public class ExpenseService {
                 Aggregation.match(where("category").ne(null)),
                 Aggregation.group("category").count().as("count"),
                 Aggregation.match(where("count").gt(1)),
-                Aggregation.project("category", "count"));
+                Aggregation.project( "count").andExpression("_id").as("category"));
 
-        AggregationResults<Document> aggregationResults = mongoTemplate.aggregate(aggregation,"expense", Document.class );
-        List<Document> value = aggregationResults.getMappedResults();
+        AggregationResults<Output> aggregationResults = mongoTemplate.aggregate(aggregation,"expense", Output.class );
 
+        List<Output> mappedResult = aggregationResults.getMappedResults();
+        List<String> cate = mappedResult.stream().map(val -> val.category).collect(Collectors.toList());
 
         //custom query
         Optional<Expense> expenseCategory = expenseRepository.findEntry(null,"test");
@@ -93,6 +95,11 @@ public class ExpenseService {
     }
     public void removeExpenseByName(String expenseName){
         expenseRepository.deleteByExpenseName(expenseName);
+    }
+
+    private class Output {
+        int count;
+        String category;
     }
 
 }
