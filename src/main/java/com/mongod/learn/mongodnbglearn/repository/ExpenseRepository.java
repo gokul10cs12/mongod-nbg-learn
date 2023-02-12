@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ExpenseRepository extends MongoRepository<Expense, String > {
@@ -17,4 +18,7 @@ public interface ExpenseRepository extends MongoRepository<Expense, String > {
     // to the return
     @Query(value = "{expenseCategory: '?0'}", fields = "{expenseName:  1}")
     List<Expense> myEntertainmentExpense(ExpenseCategory expenseCategory);
+
+    @Query(value = "{$or: [{\"category\" :  ?0},{\"name\" : ?1}]}")
+    Optional<Expense> findEntry(String category,String name );
 }
