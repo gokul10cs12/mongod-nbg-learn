@@ -11,9 +11,11 @@ import org.springframework.data.mongodb.BulkOperationException;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -61,17 +63,32 @@ public class ExpenseService {
         bulkOperationException.remove(new Query(where("_id").in(ids)));
         bulkOperationException.execute();
 
+        AggregationOptions aggregationOptions = Aggregation.newAggregationOptions()
+                .cursorBatchSize(2)
+                .build();
+
 
         //aggregation
         Aggregation aggregation2 = Aggregation.newAggregation(
                 Aggregation.match(where( "fileIdentity.sha256").ne(null)),
                 Aggregation.group( "fileIdentity.sha256").count().as("count"),
                 Aggregation.match(where("count").gt(1)),
-                Aggregation.project( "count").andExpression("_id").as( "sha256"));
+                Aggregation.project( "count").andExpression("_id").as( "sha256"))
+                .withOptions(aggregationOptions);
 
-        AggregationResults<Output> aggregationResults = mongoTemplate.aggregate(aggregation2,"expense", Output.class );
+        List<Output> mappedResult = new ArrayList<>();
 
-        List<Output> mappedResult = aggregationResults.getMappedResults();
+        CloseableIterator<Output> aggregationResults = mongoTemplate.aggregateStream(aggregation2,"expense", Output.class );
+
+        aggregationResults.forEachRemaining(mappedResult::add);
+
+        int a =0;
+
+        while (aggregationResults.hasNext()){
+            aggregationResults.forEachRemaining(mappedResult::add);
+        }
+
+//        List<Output> mappedResult = aggregationResults.getMappedResults();
         List<String> cate = mappedResult.stream().map(val -> val.sha256).collect(Collectors.toList());
 
         //custom query
