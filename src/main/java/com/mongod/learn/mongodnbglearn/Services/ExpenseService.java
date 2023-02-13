@@ -70,10 +70,16 @@ public class ExpenseService {
                 Aggregation.match(where("count").gt(1)),
                 Aggregation.project( "count").andExpression("_id").as("category"));
 
-        AggregationResults<Output> aggregationResults = mongoTemplate.aggregate(aggregation,"expense", Output.class );
+        Aggregation aggregation2 = Aggregation.newAggregation(
+                Aggregation.match(where( "fileIdentity.sha256").ne(null)),
+                Aggregation.group( "fileIdentity.sha256").count().as("count"),
+                Aggregation.match(where("count").gt(1)),
+                Aggregation.project( "count").andExpression("_id").as( "sha256"));
+
+        AggregationResults<Output> aggregationResults = mongoTemplate.aggregate(aggregation2,"expense", Output.class );
 
         List<Output> mappedResult = aggregationResults.getMappedResults();
-        List<String> cate = mappedResult.stream().map(val -> val.category).collect(Collectors.toList());
+        List<String> cate = mappedResult.stream().map(val -> val.sha256).collect(Collectors.toList());
 
         //custom query
         Optional<Expense> expenseCategory = expenseRepository.findEntry(null,"test");
@@ -99,7 +105,7 @@ public class ExpenseService {
 
     private class Output {
         int count;
-        String category;
+        String sha256;
     }
 
 }
