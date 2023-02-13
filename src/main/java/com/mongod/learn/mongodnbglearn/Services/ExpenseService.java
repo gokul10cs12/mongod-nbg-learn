@@ -65,10 +65,10 @@ public class ExpenseService {
         //aggregation
 
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(where("category").ne(null)),
-                Aggregation.group("category").count().as("count"),
+                Aggregation.match(where("fileIdentity.sha256").ne(null)),
+                Aggregation.group("fileIdentity.sha256").count().as("count"),
                 Aggregation.match(where("count").gt(1)),
-                Aggregation.project( "count").andExpression("_id").as("category"));
+                Aggregation.project( "count").andExpression("_id").as("sha256"));
 
         Aggregation aggregation2 = Aggregation.newAggregation(
                 Aggregation.match(where( "fileIdentity.sha256").ne(null)),
