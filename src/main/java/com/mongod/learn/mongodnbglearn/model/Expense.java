@@ -19,11 +19,22 @@ public class Expense {
     @Field(name = "amount")
     private BigDecimal expenseAmount;
 
+    @Field(name = "fileIdentity")
+    private FileIdentity fileIdentity;
+
 
     public Expense(String expenseName, ExpenseCategory expenseCategory, BigDecimal expenseAmount) {
         this.expenseName = expenseName;
         this.expenseCategory = expenseCategory;
         this.expenseAmount = expenseAmount;
+    }
+
+    public FileIdentity getFileIdentity() {
+        return fileIdentity;
+    }
+
+    public void setFileIdentity(FileIdentity fileIdentity) {
+        this.fileIdentity = fileIdentity;
     }
 
     public String getId() {

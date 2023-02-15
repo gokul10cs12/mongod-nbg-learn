@@ -1,7 +1,9 @@
 package com.mongod.learn.mongodnbglearn.Services;
 
+import com.google.common.collect.Lists;
 import com.mongod.learn.mongodnbglearn.model.Expense;
 import com.mongod.learn.mongodnbglearn.model.ExpenseCategory;
+import com.mongod.learn.mongodnbglearn.model.FileIdentity;
 import com.mongod.learn.mongodnbglearn.repository.CustomExpenseRepository;
 import com.mongod.learn.mongodnbglearn.repository.ExpenseRepository;
 import com.mongodb.client.model.ValidationAction;
@@ -19,6 +21,7 @@ import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,10 +61,11 @@ public class ExpenseService {
         Query query = new Query();
         query.addCriteria(criteria);
 
+
+
+        Set<FileIdentity> duplicates = new HashSet<>();
+        Set<String> idsToDelete = new HashSet<>();
         //bulk operation
-        BulkOperations bulkOperationException = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, "expense");
-        bulkOperationException.remove(new Query(where("_id").in(ids)));
-        bulkOperationException.execute();
 
         AggregationOptions aggregationOptions = Aggregation.newAggregationOptions()
                 .cursorBatchSize(2)
@@ -76,29 +80,47 @@ public class ExpenseService {
                 Aggregation.project( "count").andExpression("_id").as( "sha256"))
                 .withOptions(aggregationOptions);
 
+
         List<Output> mappedResult = new ArrayList<>();
 
-        CloseableIterator<Output> aggregationResults = mongoTemplate.aggregateStream(aggregation2,"expense", Output.class );
+        AggregationResults<Output> aggregationResults = mongoTemplate.aggregate(aggregation2,"expense", Output.class );
 
-        aggregationResults.forEachRemaining(mappedResult::add);
 
-        int a =0;
+        mappedResult = aggregationResults.getMappedResults();
 
-        while (aggregationResults.hasNext()){
-            aggregationResults.forEachRemaining(mappedResult::add);
+
+        Set<String> shaSet = mappedResult.stream().map(val -> val.sha256).collect(Collectors.toSet());
+        Query query1 = new Query();
+        Criteria criteria1 = where("fileIdentity.sha256").in(shaSet).and("fileIdentity.md5").exists(false);
+        query1.addCriteria(criteria1);
+
+        mongoTemplate.remove(query1, Expense.class);
+
+
+//        Query newQuery = new Query();
+        Criteria myCriteria =  where("fileIdentity.sha256").in(shaSet).and("fileIdentity.md5").exists(true);
+        Query query2 = new Query();
+
+        query2.addCriteria(myCriteria);
+        List<Expense> queryResult = mongoTemplate.find(query2, Expense.class);
+        queryResult.forEach(entity ->{
+            if(!duplicates.add(entity.getFileIdentity())) {
+                System.out.println("duplicate ->" + entity.getFileIdentity().getSha256());
+                shaSet.add(entity.getFileIdentity().getSha256());
+                idsToDelete.add(entity.getId());
+            }
+        });
+
+        if (!idsToDelete.isEmpty()){
+            Query query3 = new Query();
+            Criteria newCriteria = where("_id").in(idsToDelete).and("fileIdentity.md5").exists(true);
+            query3.addCriteria(newCriteria);
+
+            mongoTemplate.remove(query3, Expense.class);
         }
 
-//        List<Output> mappedResult = aggregationResults.getMappedResults();
-        List<String> cate = mappedResult.stream().map(val -> val.sha256).collect(Collectors.toList());
+        int i =0;
 
-        //custom query
-        Optional<Expense> expenseCategory = expenseRepository.findEntry(null,"test");
-        if (expenseCategory.isPresent()){
-            System.out.println("FindEntry---->" + expenseCategory.get().getExpenseName());
-        }
-
-        //get the count
-        long count = mongoTemplate.estimatedCount("expense");
         return mongoTemplate.find(query, Expense.class);
     }
     public Expense updateExpenses(Expense expense) {
