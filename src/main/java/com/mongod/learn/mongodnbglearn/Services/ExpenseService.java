@@ -1,27 +1,19 @@
 package com.mongod.learn.mongodnbglearn.Services;
 
-import com.google.common.collect.Lists;
 import com.mongod.learn.mongodnbglearn.model.Expense;
 import com.mongod.learn.mongodnbglearn.model.ExpenseCategory;
 import com.mongod.learn.mongodnbglearn.model.FileIdentity;
 import com.mongod.learn.mongodnbglearn.repository.CustomExpenseRepository;
 import com.mongod.learn.mongodnbglearn.repository.ExpenseRepository;
-import com.mongodb.client.model.ValidationAction;
-import org.bson.Document;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.mongodb.BulkOperationException;
-import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -101,7 +93,7 @@ public class ExpenseService {
             }
         });
 
-        Criteria newCriteria = where("_id").in(idsToDelete).and("fileIdentity.md5").exists(true);
+        Criteria newCriteria = where("_id").in(idsToDelete);
         removeRecords(newCriteria);
         return mongoTemplate.find(query, Expense.class);
     }
