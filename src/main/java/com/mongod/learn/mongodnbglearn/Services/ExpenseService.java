@@ -1,5 +1,6 @@
 package com.mongod.learn.mongodnbglearn.Services;
 
+import com.mongod.learn.mongodnbglearn.MyTestClass;
 import com.mongod.learn.mongodnbglearn.model.Expense;
 import com.mongod.learn.mongodnbglearn.model.ExpenseCategory;
 import com.mongod.learn.mongodnbglearn.model.FileIdentity;
@@ -31,11 +32,14 @@ public class ExpenseService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public ExpenseService(ExpenseRepository expenseRepository, CustomExpenseRepository customExpenseRepository, MongoTemplate mongoTemplate, ApplicationEventPublisher applicationEventPublisher) {
+    private final MyTestClass myTestClass;
+
+    public ExpenseService(ExpenseRepository expenseRepository, CustomExpenseRepository customExpenseRepository, MongoTemplate mongoTemplate, ApplicationEventPublisher applicationEventPublisher, MyTestClass myTestClass) {
         this.expenseRepository = expenseRepository;
         this.customExpenseRepository = customExpenseRepository;
         this.mongoTemplate = mongoTemplate;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.myTestClass = myTestClass;
     }
 
     public Expense addExpense(Expense expense){
@@ -53,7 +57,7 @@ public class ExpenseService {
         Query query = new Query();
         query.addCriteria(criteria);
 
-
+        myTestClass.printValues();
 
         Set<String> idsToDelete = new HashSet<>();
         //bulk operation
@@ -95,7 +99,7 @@ public class ExpenseService {
 
         Criteria newCriteria = where("_id").in(idsToDelete);
         removeRecords(newCriteria);
-        return mongoTemplate.find(query, Expense.class);
+        return expenseRepository.findAll();
     }
 
     private void removeRecords(Criteria criteria){

@@ -69,7 +69,6 @@ class SharedProduct {
 class Producer extends Thread {
 
     SharedProduct product;
-
     Producer(String name, SharedProduct product){
         super(name);
         this.product = product;
