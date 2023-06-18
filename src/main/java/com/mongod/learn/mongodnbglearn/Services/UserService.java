@@ -1,5 +1,6 @@
 package com.mongod.learn.mongodnbglearn.Services;
 
+import com.mongod.learn.mongodnbglearn.model.CustomEventModel;
 import com.mongod.learn.mongodnbglearn.model.User;
 import com.mongod.learn.mongodnbglearn.repository.ExpenseRepository;
 import com.mongod.learn.mongodnbglearn.repository.UserRepository;
@@ -26,8 +27,8 @@ public class UserService {
     }
 
     @EventListener
-    public void testListener(String value){
-        System.out.println("the value is got is ="+ value);
+    public void testListener(CustomEventModel customEventModel){
+        System.out.println("UserService: got the message from userService:"+ customEventModel.getMessage());
     }
     public User createUser(User user) {
         user.setId(UUID.randomUUID().toString());

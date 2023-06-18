@@ -1,12 +1,15 @@
 package com.mongod.learn.mongodnbglearn.Services;
 
 import com.mongod.learn.mongodnbglearn.MyTestClass;
+import com.mongod.learn.mongodnbglearn.model.CustomEventModel;
 import com.mongod.learn.mongodnbglearn.model.Expense;
 import com.mongod.learn.mongodnbglearn.model.ExpenseCategory;
 import com.mongod.learn.mongodnbglearn.model.FileIdentity;
 import com.mongod.learn.mongodnbglearn.repository.CustomExpenseRepository;
 import com.mongod.learn.mongodnbglearn.repository.ExpenseRepository;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
@@ -34,6 +37,12 @@ public class ExpenseService {
 
     private final MyTestClass myTestClass;
 
+    @EventListener(ApplicationReadyEvent.class)
+    public void startup(){
+        System.out.println("startup Gokul----->");
+    }
+
+
     public ExpenseService(ExpenseRepository expenseRepository, CustomExpenseRepository customExpenseRepository, MongoTemplate mongoTemplate, ApplicationEventPublisher applicationEventPublisher, MyTestClass myTestClass) {
         this.expenseRepository = expenseRepository;
         this.customExpenseRepository = customExpenseRepository;
@@ -50,8 +59,9 @@ public class ExpenseService {
     public void removeExpense(){}
     public List<Expense> getAllExpenses(){
         ExpenseCategory []categories = new ExpenseCategory[]{ExpenseCategory.ENTERTAINMENT, ExpenseCategory.UTILITIES};
-
-        applicationEventPublisher.publishEvent("String it is");
+        CustomEventModel customEventModel = new CustomEventModel();
+        customEventModel.setMessage("sent message from expense service");
+        applicationEventPublisher.publishEvent(customEventModel);
         Set<String> ids = new HashSet<>();
         Criteria criteria = where("category").in(categories);
         Query query = new Query();
@@ -79,7 +89,6 @@ public class ExpenseService {
         List<Output> mappedResult;
 
         AggregationResults<Output> aggregationResults = mongoTemplate.aggregate(aggregation2,"expense", Output.class );
-
 
         mappedResult = aggregationResults.getMappedResults();
         Set<String> shaSet = mappedResult.stream().map(val -> val.sha256).collect(Collectors.toSet());
