@@ -18,3 +18,4 @@ public class RabbitMqSecondConsumer {
     }
 }
 //raf : https://www.springcloud.io/post/2022-03/messaging-using-rabbitmq-in-spring-boot-application/#gsc.tab=0
+//ref : types of exchanges implementation https://www.javainuse.com/messaging/rabbitmq/exchange
