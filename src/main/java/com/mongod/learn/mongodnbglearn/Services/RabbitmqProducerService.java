@@ -23,7 +23,6 @@ public class RabbitmqProducerService {
         RabbitModel model = new RabbitModel();
         model.setMessage("this is a model message");
         rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, message);
-        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY2, model);
     }
 
 }

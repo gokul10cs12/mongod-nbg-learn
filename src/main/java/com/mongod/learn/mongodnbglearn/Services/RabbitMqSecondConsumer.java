@@ -13,8 +13,8 @@ public class RabbitMqSecondConsumer {
     private static final Logger LOG = LoggerFactory.getLogger(RabbitMqSecondConsumer.class);
 
     @RabbitListener(queues = {RabbitMqConfig.SECOND_QUEUE})
-    void getMessageFromRabbit(RabbitModel model) {
-        LOG.info("receiver by second consumer---> {}", model.getMessage());
+    void getMessageFromRabbit(String model) {
+        LOG.info("receiver by second consumer---> {}", model);
     }
 }
 //raf : https://www.springcloud.io/post/2022-03/messaging-using-rabbitmq-in-spring-boot-application/#gsc.tab=0

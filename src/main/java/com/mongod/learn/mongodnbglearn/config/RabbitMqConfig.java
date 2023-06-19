@@ -12,9 +12,9 @@ public class RabbitMqConfig {
 
     public static final String EXCHANGE_NAME ="spring-rabbit-exchange";
 
-    public static final String ROUTING_KEY = "routing-key";
+    public static final String ROUTING_KEY = "routing.key";
 
-    public static final String ROUTING_KEY2 = "routing-key2";
+    public static final String ROUTING_KEY2 = "routing.key2";
 
 
     //spring bean for rabbitmq queue
@@ -41,7 +41,7 @@ public class RabbitMqConfig {
         return BindingBuilder
                 .bind(queue())
                 .to(exchange())
-                .with(ROUTING_KEY);
+                .with("routing.key*");
     }
 
     @Bean
@@ -49,7 +49,7 @@ public class RabbitMqConfig {
         return BindingBuilder
                 .bind(queueTwo())
                 .to(exchange())
-                .with(ROUTING_KEY2);
+                .with("routing.*");
     }
 
 }
