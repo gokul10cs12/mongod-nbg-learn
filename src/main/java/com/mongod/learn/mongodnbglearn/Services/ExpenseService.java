@@ -53,7 +53,6 @@ public class ExpenseService {
 
     public Expense addExpense(Expense expense){
         expense.setId(UUID.randomUUID().toString());
-        List<Expense> entertainmentExpenses= expenseRepository.myEntertainmentExpense(ExpenseCategory.ENTERTAINMENT);
         return expenseRepository.insert(expense);
     }
     public void removeExpense(){}
