@@ -9,8 +9,6 @@ services:
       - 27017:27017
     links:
       -  mongod-service
-    networks:
-      - resolute
 
   mongod-service:
     image: springlearn:latest
@@ -28,11 +26,5 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-    networks:
-      - resolute
 
 
-networks:
-  resolute:
-    external:
-      name: resolute
