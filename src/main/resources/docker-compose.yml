@@ -1,0 +1,38 @@
+
+
+version: "1"
+services:
+  mongo:
+    image: mongo:latest
+    container_name: "mongo"
+    ports:
+      - 27017:27017
+    links:
+      -  mongod-service
+    networks:
+      - resolute
+
+  mongod-service:
+    image: springlearn:latest
+    container_name: "springlearncompose"
+    ports:
+      - 8080:8080
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    hostname: rabbitmq
+    container_name: "rabbitmq"
+
+    links:
+      - mongod-service
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - resolute
+
+
+networks:
+  resolute:
+    external:
+      name: resolute
