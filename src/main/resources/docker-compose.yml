@@ -10,14 +10,19 @@ services:
     links:
       -  mongod-service
 
+    volumes:
+      - ./data:/data/db
+
   mongod-service:
     image: springlearn:latest
     container_name: "springlearncompose"
+    build:
+      context: ../../../
     ports:
       - 8080:8080
 
   rabbitmq:
-    image: rabbitmq:3.12-management
+    image: rabbitmq:latest
     hostname: rabbitmq
     container_name: "rabbitmq"
 
