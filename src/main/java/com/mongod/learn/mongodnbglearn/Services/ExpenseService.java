@@ -116,7 +116,7 @@ public class ExpenseService {
         mongoTemplate.remove(query, Expense.class);
     }
     public Expense updateExpenses(Expense expense) {
-         Expense updatedExpense =  customExpenseRepository.updateExpense(expense);
+         Expense updatedExpense =  expenseRepository.updateExpense(expense);
         return  updatedExpense;
 
     }

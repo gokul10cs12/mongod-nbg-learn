@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface ExpenseRepository extends MongoRepository<Expense, String > {
+public interface ExpenseRepository extends MongoRepository<Expense, String >, CustomExpenseRepository {
     Expense findExpenseByExpenseName(String name);
     void deleteByExpenseName(String name);
 

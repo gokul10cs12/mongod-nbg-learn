@@ -21,8 +21,7 @@ public class CustomExpenseRepositoryImpl implements CustomExpenseRepository {
     public Expense updateExpense(Expense expense) {
         Query query = new Query(Criteria.where("name").is(expense.getExpenseName()));
         Update update = new Update();
-        update.set("amount", expense.getExpenseAmount());
-        update.set("category", expense.getExpenseCategory());
+        update.set("amount", expense.getExpenseAmount()).set("category", expense.getExpenseCategory());
         FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
         Expense result = mongoTemplate.findAndModify(query, update, findAndModifyOptions, Expense.class);
 
