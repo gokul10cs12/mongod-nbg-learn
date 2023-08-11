@@ -29,8 +29,6 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
 
-    private final CustomExpenseRepository customExpenseRepository;
-
     private final MongoTemplate mongoTemplate;
 
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -43,9 +41,8 @@ public class ExpenseService {
     }
 
 
-    public ExpenseService(ExpenseRepository expenseRepository, CustomExpenseRepository customExpenseRepository, MongoTemplate mongoTemplate, ApplicationEventPublisher applicationEventPublisher, MyTestClass myTestClass) {
+    public ExpenseService(ExpenseRepository expenseRepository,  MongoTemplate mongoTemplate, ApplicationEventPublisher applicationEventPublisher, MyTestClass myTestClass) {
         this.expenseRepository = expenseRepository;
-        this.customExpenseRepository = customExpenseRepository;
         this.mongoTemplate = mongoTemplate;
         this.applicationEventPublisher = applicationEventPublisher;
         this.myTestClass = myTestClass;

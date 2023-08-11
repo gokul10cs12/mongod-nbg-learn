@@ -10,7 +10,9 @@ import static com.mongod.learn.mongodnbglearn.PropertiesClass.PREFIX;
 @Component
 @ConfigurationProperties(prefix = PREFIX)
 public class PropertiesClass {
-    public static final String PREFIX = "myconfig";
+    public static final String PREFIX = "file.upload";
+
+    private String location;
 
     private final String name = "Gokul";
 

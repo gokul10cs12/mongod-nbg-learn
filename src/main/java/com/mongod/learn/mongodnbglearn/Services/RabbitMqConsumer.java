@@ -11,8 +11,8 @@ public class RabbitMqConsumer {
 
     private static final Logger LOG = LoggerFactory.getLogger(RabbitMqConsumer.class);
 
-    @RabbitListener(queues = {RabbitMqConfig.QUEUE_NAME})
-    void consume(String message) {
-        LOG.info("Received message : --->{}", message);
-    }
+//    @RabbitListener(queues = {RabbitMqConfig.QUEUE_NAME})
+//    void consume(String message) {
+//        LOG.info("Received message : --->{}", message);
+//    }
 }
